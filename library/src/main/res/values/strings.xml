@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Library</string>
+
+    <string name="limit_number_edit_notify">
+        <Data>
+            <![CDATA[还可以输入<font color="#33a8a7">%1$s</font>字]]>
+        </Data>
+    </string>
+
 </resources>
