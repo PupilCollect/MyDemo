@@ -1,26 +1,31 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+// 顶级构建文件，可以在所有子项目/模块中添加常见的配置选项；
 
 buildscript {
     repositories {
+        // 引用托管仓库的名称
         google()
         jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
     }
     dependencies {
+        //申明插件的版本号
         classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        // 注意：不要将你的应用程序依赖项放在这里；
+        // 它们属于单独的模块构建 .gradle文件。
     }
 }
 
 allprojects {
     repositories {
+        // 引用托管仓库的名称
         google()
         jcenter()
-
         maven { url 'https://jitpack.io' }
     }
 }

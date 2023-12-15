@@ -2,22 +2,151 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.collect.mydemo"
         minSdkVersion 17
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        flavorDimensions "pack"  // 多渠道打包需要此参数，不然会报错
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    // 多渠道的一些配置
+    productFlavors {
+        develop {
+            applicationId "com.collect.mydemo"
+            dimension "pack"
+            manifestPlaceholders = [appName: "develop"]
+        }
+        product {
+            applicationId "com.collect.mydemo"
+            dimension "pack"
+            manifestPlaceholders = [appName: "product"]
+        }
+    }
+
+    // 这是第一种写法（如下）：签名文件配置
+    /*signingConfigs {
+        debug {
+            storeFile file('../mydemo.jks')
+            storePassword "admin123"
+            keyAlias "admin"
+            keyPassword "admin123"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+        release {
+            storeFile file('../mydemo.jks')
+            storePassword "admin123"
+            keyAlias "admin"
+            keyPassword "admin123"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }*/
+
+
+    // 第二种写法：app文件的根目录下定义一个文件 signing.properties
+    signingConfigs {
+        debug {
+            //storeFile
+            //storePassword
+            //keyAlias
+            //keyPassword
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+        release {
+            storeFile
+            storePassword
+            keyAlias
+            keyPassword
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+    getSigningProperties()
+
     buildTypes {
+        debug {
+            debuggable true // 启用debug的buildType配置
+        }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    // 输出类型
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            // 判断是 release 还是 debug 版本
+            def buildType = variant.buildType.name
+            // 判断渠道名称
+            def channelName = variant.productFlavors[0].name
+            // 获取当前时间的 "YYYY-MM-dd" 格式
+            def createTime = new Date().format("YYYY-MM-dd hh:mm:ss", TimeZone.getTimeZone("UTC"))
+
+            // 将其输入到制定文件夹，
+            def root = file('../outapk')   // 项目根目录 outapk 文件夹下
+            if (buildType == "release") {
+                variant.getPackageApplication().outputDirectory = new File(root, "/release/")
+            } else {
+                variant.getPackageApplication().outputDirectory = new File(root, "/debug/")
+            }
+            // 并根据:渠道、app版本、生产版本（debug/release）修改.apk名称
+            outputFileName = "${channelName}_${buildType}_${variant.versionName}_${variant.versionCode}_${createTime}.apk".toLowerCase()
+        }
+    }
 }
+
+// 读取签名配置文件
+def getSigningProperties() {
+    def propFile = file('../signing.properties')
+    if (propFile.canRead()) {
+        def Properties props = new Properties()
+        props.load(new FileInputStream(propFile))
+        if (props != null && props.containsKey('STORE_FILE')
+                && props.containsKey('STORE_PASSWORD')
+                && props.containsKey('KEY_ALIAS')
+                && props.containsKey('KEY_PASSWORD')) {
+
+            def store_file = file(props['STORE_FILE'])
+            def store_pwd = props['STORE_PASSWORD']
+            def key_alias = props['KEY_ALIAS']
+            def key_pwd = props['KEY_PASSWORD']
+
+            println 'signing.properties store_file -> ' + store_file
+            println 'signing.properties store_pwd -> ' + store_pwd
+            println 'signing.properties key_alias -> ' + key_alias
+            println 'signing.properties key_pwd -> ' + key_pwd
+
+            //android.signingConfigs.debug.storeFile = store_file
+            //android.signingConfigs.debug.storePassword = store_pwd
+            //android.signingConfigs.debug.keyAlias = key_alias
+            //android.signingConfigs.debug.keyPassword = key_pwd
+
+            android.signingConfigs.release.storeFile = store_file
+            android.signingConfigs.release.storePassword = store_pwd
+            android.signingConfigs.release.keyAlias = key_alias
+            android.signingConfigs.release.keyPassword = key_pwd
+        } else {
+            println '--->> signing.properties found but some entries are missing'
+            android.buildTypes.release.signingConfig = null
+        }
+    } else {
+        println '--->> signing.properties not found'
+        android.buildTypes.release.signingConfig = null
+    }
+}
+
+// 获取当前时间的 "YYYY-MM-dd" 格式
+def createTime() {
+    return new Date().format("YYYY-MM-dd hh:mm:ss", TimeZone.getTimeZone("GMT+8"))
+}
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
