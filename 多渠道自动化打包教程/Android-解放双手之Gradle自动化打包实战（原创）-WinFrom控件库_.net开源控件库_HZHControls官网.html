@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<!-- saved from url=(0042)http://www.hzhcontrols.com/new-888999.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库|.net开源控件库|HZHControls官网</title>
+    
+    <!-- Meta tag Keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="
+                                                                        
+          
+            本文已独家授权 郭霖 ( guolin_blog ) 公众号发布！
+前言：
+解放双手，双击桌面快捷方式生成apk包，基于Gradle、bat文件让开发人员告别打包烦扰！
+前不久有一个Unity3D研发的小仙|WinFrom控件库|HZHControls官网|完全开源|.net framework4.0|类Layui控件|自定义控件|技术交流|个人博客 ">
+    <script src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/hm.js"></script><script src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/push.js"></script><script src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/f.txt" id="google_shimpl"></script><script type="application/x-javascript">
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <!--// Meta tag Keywords -->
+    <!-- css files -->
+    <link rel="stylesheet" href="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/bootstrap.css">
+    <link rel="stylesheet" href="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/doc.css">
+    <link rel="stylesheet" href="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/base.css">
+    <!-- Bootstrap-Core-CSS -->
+    <link rel="stylesheet" href="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/style.css" type="text/css" media="all">
+    <!-- Style-CSS -->
+    <script src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/ueditor.parse.min.js"></script>
+    <link rel="stylesheet" href="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/blogs.css">
+    <style>
+        .cc{
+            display: none;
+        }
+        p{
+            max-width: :1140px;
+        }
+        pre{
+            max-width: :1140px;
+        }
+    </style>
+    
+    <!-- //css files -->
+<meta http-equiv="origin-trial" content="As0hBNJ8h++fNYlkq8cTye2qDLyom8NddByiVytXGGD0YVE+2CEuTCpqXMDxdhOMILKoaiaYifwEvCRlJ/9GcQ8AAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="AgRYsXo24ypxC89CJanC+JgEmraCCBebKl8ZmG7Tj5oJNx0cmH0NtNRZs3NB5ubhpbX/bIt7l2zJOSyO64NGmwMAAACCeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="A/ERL66fN363FkXxgDc6F1+ucRUkAhjEca9W3la6xaLnD2Y1lABsqmdaJmPNaUKPKVBRpyMKEhXYl7rSvrQw+AkAAACNeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6OdGH3fVf4eKRDbXb4thXA4InNqDJDRhZ8U533U/roYjp4Yau0T3YSuc63vmAs/8ga1cD0E3A7LEq6AXk1uXgsAAACTeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="As0hBNJ8h++fNYlkq8cTye2qDLyom8NddByiVytXGGD0YVE+2CEuTCpqXMDxdhOMILKoaiaYifwEvCRlJ/9GcQ8AAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="AgRYsXo24ypxC89CJanC+JgEmraCCBebKl8ZmG7Tj5oJNx0cmH0NtNRZs3NB5ubhpbX/bIt7l2zJOSyO64NGmwMAAACCeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="A/ERL66fN363FkXxgDc6F1+ucRUkAhjEca9W3la6xaLnD2Y1lABsqmdaJmPNaUKPKVBRpyMKEhXYl7rSvrQw+AkAAACNeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6OdGH3fVf4eKRDbXb4thXA4InNqDJDRhZ8U533U/roYjp4Yau0T3YSuc63vmAs/8ga1cD0E3A7LEq6AXk1uXgsAAACTeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="As0hBNJ8h++fNYlkq8cTye2qDLyom8NddByiVytXGGD0YVE+2CEuTCpqXMDxdhOMILKoaiaYifwEvCRlJ/9GcQ8AAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="AgRYsXo24ypxC89CJanC+JgEmraCCBebKl8ZmG7Tj5oJNx0cmH0NtNRZs3NB5ubhpbX/bIt7l2zJOSyO64NGmwMAAACCeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="A/ERL66fN363FkXxgDc6F1+ucRUkAhjEca9W3la6xaLnD2Y1lABsqmdaJmPNaUKPKVBRpyMKEhXYl7rSvrQw+AkAAACNeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6OdGH3fVf4eKRDbXb4thXA4InNqDJDRhZ8U533U/roYjp4Yau0T3YSuc63vmAs/8ga1cD0E3A7LEq6AXk1uXgsAAACTeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="As0hBNJ8h++fNYlkq8cTye2qDLyom8NddByiVytXGGD0YVE+2CEuTCpqXMDxdhOMILKoaiaYifwEvCRlJ/9GcQ8AAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="AgRYsXo24ypxC89CJanC+JgEmraCCBebKl8ZmG7Tj5oJNx0cmH0NtNRZs3NB5ubhpbX/bIt7l2zJOSyO64NGmwMAAACCeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="A/ERL66fN363FkXxgDc6F1+ucRUkAhjEca9W3la6xaLnD2Y1lABsqmdaJmPNaUKPKVBRpyMKEhXYl7rSvrQw+AkAAACNeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6OdGH3fVf4eKRDbXb4thXA4InNqDJDRhZ8U533U/roYjp4Yau0T3YSuc63vmAs/8ga1cD0E3A7LEq6AXk1uXgsAAACTeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><link id="syntaxhighlighter_css" rel="stylesheet" type="text/css" href="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/shCoreDefault.css"><script id="syntaxhighlighter_js" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/shCore.js" type="text/javascript" defer="defer"></script><style id="chartsContainerHeight">
+.edui-chart-container { height:300px}</style></head>
+<body style="">
+    <script async="" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/f(1).txt" crossorigin="anonymous" data-checked-head="true"></script>
+<header style="background-color: #222">
+        <div class="container">
+            <!-- nav -->
+            <nav class="py-3">
+                <div id="logo">
+                    <h1>
+                        <a class="navbar-brand" title="HZHControls" href="http://www.hzhcontrols.com/index.html">
+                            <img src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/logo.png" height="40">
+                        </a>
+                       
+                    </h1>
+                </div>
+               
+                <label for="drop" class="toggle"><span class="fa fa-bars"></span></label>
+                <input type="checkbox" id="drop">
+                <ul class="menu mt-2">
+                    
+                    <li class="mr-lg-3 mr-2" style="clear: none;"><a href="http://www.hzhcontrols.com/index.html">主页</a></li>
+                   <li class="mr-lg-3 mr-2 pb-0" style="clear: none;">
+                        <!-- First Tier Drop Down -->
+                        <label for="drop-2" class="toggle">定制开发 <span class="fa fa-angle-down" aria-hidden="true"></span></label>
+                        <a href="http://www.hzhcontrols.com/new-888999.html#">定制开发 <span class="fa fa-angle-down" aria-hidden="true"></span></a>
+                        <input type="checkbox" id="drop-2">
+                        <ul class="drop-down-ul">
+                            <li><a>请联系QQ：623128629</a></li>
+                            
+                        </ul>
+                    </li>
+                    <li class="mr-lg-3 mr-2" style="clear: none;"><a href="http://www.hzhcontrols.com/new-888999.html"></a><a href="http://www.hzhcontrols.com/doc.html">文档</a></li>                   
+                    <li class="mr-lg-3 mr-2 pb-0" style="clear: none;">
+                        <!-- First Tier Drop Down -->
+                        <label for="drop-2" class="toggle">源码下载 <span class="fa fa-angle-down" aria-hidden="true"></span></label>
+                        <a href="http://www.hzhcontrols.com/new-888999.html#">源码下载 <span class="fa fa-angle-down" aria-hidden="true"></span></a>
+                        <input type="checkbox" id="drop-2">
+                        <ul class="drop-down-ul">
+                            <li><a href="https://gitee.com/kwwwvagaa/net_winform_custom_control">码云</a></li>
+                            <li><a href="https://github.com/kwwwvagaa/NetWinformControl">Github</a></li>
+							 <li><a href="https://gitee.com/kwwwvagaa/HZHControls_Doc">文档（码云）</a></li>
+							  <li><a href="https://github.com/kwwwvagaa/NetWinformControl_Doc">文档（Github）</a></li>
+                        </ul>
+                    </li>
+                    <!--<li class='mr-lg-3 mr-2' style='clear: none;'><a href=''><a href='/doc-69.html'>捐赠</a></a></li>--> 
+                    <!--<li class='mr-lg-3 mr-2 pb-0' style='clear: none;'>-->
+                    <!--    <label for='drop-2' class='toggle'>商业授权<span class='fa fa-angle-down' aria-hidden='true'></span></label>-->
+                    <!--    <a href='#'>商业授权 <span class='fa fa-angle-down' aria-hidden='true'></span></a>-->
+                    <!--    <input type='checkbox' id='drop-2' />-->
+                    <!--    <ul class='drop-down-ul'>-->
+                    <!--        <li><a href='javascript:void(0);'>协商授权QQ623128629</a></li>-->
+                    <!--        <li><a target='_blank' href='https://shop.zbj.com/16228724/sid-1618518.html'>自助授权（含票）</a></li>-->
+                    <!--    </ul>-->
+                    <!--</li>-->
+                    <li class="mr-lg-3 mr-2" style="clear: none;"><a href="http://www.hzhcontrols.com/new-888999.html"></a><a href="http://www.hzhcontrols.com/blogs.html">个人博客</a></li>   
+                    <li class="mr-lg-3 mr-2" style="clear: none;"><a href="http://www.hzhcontrols.com/new-888999.html"></a><a href="http://www.hzhcontrols.com/news.html">技术博文</a></li>   
+                    <li class="mr-lg-3 mr-2 pb-0" style="clear: none;">
+                        <!-- First Tier Drop Down -->
+                        <label for="drop-2" class="toggle">工具 <span class="fa fa-angle-down" aria-hidden="true"></span></label>
+                        <a href="http://www.hzhcontrols.com/new-888999.html#">工具 <span class="fa fa-angle-down" aria-hidden="true"></span></a>
+                        <input type="checkbox" id="drop-2">
+                        <ul class="drop-down-ul">
+                            <li><a href="http://www.hzhcontrols.com/colors.html">配色工具</a></li>
+                            <li><a href="http://www.hzhcontrols.com/colorList.html">糖果色值</a></li>
+                        </ul>
+                    </li>
+                     
+                </ul>
+                <!--<div id="ad" style="position: absolute;left: 200;margin-left: 250px;margin-top: -10px;">
+                    <script>
+                        document.write('<h1><a href="http://www.just2chat.cn?ref=hzhcontrols.com/" target="_blank" style="padding: 0px 0px 0px 0px;margin-left: 60px;margin-top: 0;"><img src="/ad1.png"  style="width: 300px;height: 60px;"></a> </h1>')
+                    </script>
+                </div>-->
+            </nav>
+            <!-- //nav -->
+        </div>
+    </header>
+       
+    <!-- welcome -->
+    <section class="welcome py-5" id="welcome" style="background-color: rgb(240, 238, 245); height: auto !important;">
+        <div class="container py-md-5" style="height: auto !important;">
+            <div class="row" style="height: auto !important;">
+                <div id="docValue" class="blogbody col-md-9" style="height: auto !important; min-height: 0px !important;">
+                                        
+                    					<script async="" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/f(1).txt" crossorigin="anonymous" data-checked-head="true"></script>
+<!-- 页面顶部 -->
+<ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-9734839099034402" data-ad-slot="1138993400" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done" data-ad-status="unfilled"><div id="aswift_1_host" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 280px; width: 825px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;"><iframe id="aswift_1" name="aswift_1" browsingtopics="true" style="left:0;position:absolute;top:0;border:0;width:825px;height:280px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="825" height="280" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/ads.html" data-google-container-id="a!2" data-load-complete="true"></iframe></div></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+							<div class="site-h1"><h1>Android-解放双手之Gradle自动化打包实战（原创）</h1><div style="color: black;font-size: 13px;line-height: 30px;margin: 10px;">发布时间：2023-12-15 10:17:05</div></div><div class="contents"><pre class="cc"> char where()
+{
+         for($Bl=0;$Bl&lt;41;$Bl++)
+     {
+        gradedance($tapenl2brbright);
+         switch($statgold){
+     case 'windowcopypurpose':{
+          burn());
+          }
+     break;
+     case 'proper':{
+          NcITU($thirdstrcmpmaking));
+          }
+     break;
+     }
+
+         echo 'ojRPCJOhzjBBVqlvwVfsUzixcMu';
+     }
+
+}
+public double VgP($DUG)
+{
+         for($bSaV=0;$bSaV&lt;46;$bSaV++)
+     {
+        ironking();
+         switch($standing){
+     case 'levelagent':{
+          cBJ($similar_text));
+          }
+     break;
+     case 'topheld':{
+          buildingindex($around));
+          }
+     break;
+     }
+
+         echo 'tYvUnNIaBdDHGWCQOVwjq';
+     }
+
+}
+private string noisehigh()
+{
+         for($MtWbO=0;$MtWbO&lt;45;$MtWbO++)
+     {
+        pressduringwith();
+         if(improvegiftdance()){
+         echo 'iuJZbgPUsBXKfvjQKfveijpG';
+     }
+
+}
+</pre>                                                                                  <div class="show-content-free">            <h4><b>本文已独家授权 郭霖 ( guolin_blog&nbsp;) 公众号发布！<br></b></h4><p><b>前言：</b></p><p>解放双手，双击桌面快捷方式生成apk包，基于Gradle、bat文件让开发人员告别打包烦扰！</p><p>前不久有一个Unity3D研发的小仙女在羽毛球场问我关于Android Studio打apk的一些事情，她说他们运营和测试隔三差五的就坐着她旁边要她重复性的打包（估计是那群痴汉打着工作的幌子实际上干着撩妹的活惹火了这位认真敬业的小姐姐），那么有没有省力一点的办法快速打包？</p><p>一直以来，对于某些频繁进行打包工作的业务部开发人员来说，打包工作不仅繁琐冗余而且费时费力。如何快速、高效的解决频繁出包以及提高生产效率解放生产力是我们一直在思考的问题。有没有一种办法比如<b>我只想要双击桌面快捷方式然后就打包成APK&nbsp;</b>接着在保存到自定义盘符路径？&nbsp;&nbsp;答案是有的。我们知道Android Studio是基于Gradle来进行快速构建项目，Gradle本质是一个基于Apache Ant和Apache Maven概念的项目自动化构建工具。 由于一些论坛上的文章是基于Android2.X版本来进行解释说明但是笔者通过这几天的实战（Android Studio版本是3.0以上）发现网上的一些办法已经用不了且新版本自然而然增加了一些之前未提及的新特性，所以本文主要是<b>针对Android Studio3.0版本以上以及Gradle</b>进行一些基本的内容介绍以及如何通过组合技巧实现快速打包；以及针对某一些特定的开发场景如何通过 Java + Gradle去思考并解决问题）。</p><p>PS：文章使用到的源码请见末尾。</p><p>首先是笔者个人开发环境：</p><p>&nbsp; &nbsp; JDK：1.8.0_71</p><p>&nbsp; &nbsp; Android Studio：3.0</p><p>&nbsp; &nbsp; PC系统：Win7</p><p>由于我们这里是基于Gradle进行后面的操作，所以我们首先需集成下Gradle的环境变量（前提是需要配置好JDK）如何配置Gradle环境？由于Android Studio里面内置了Gradle，这里我就快速提供Gradle环境配置方案（当然也可以自行谷歌或者百度）：</p><p>1：找到自己Android Studio目录下的gradle文件。这是笔者的Android Studio目录下的gradle文件路径：&nbsp; <b>C:Program FilesAndroidAndroid Studiogradlegradle-4.1in&nbsp; </b>找到这个目录以后，按照配置JDK那样首先将其编辑到系统变量<b> GRADLE_HOME</b>：</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:39.94%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_a5fb38b9f82e606bef40385ec5d40a2e.png" alt="img_a5fb38b9f82e606bef40385ec5d40a2e.png"></div></div><div class="image-caption">GRADLE_HOME</div></div><p>2：步骤一完成以后将 <b>GRADLE_HOME 添加到系统变量，如下图</b></p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:101.02%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_874875b0e712d739591bea0117fd0815.png" alt="img_874875b0e712d739591bea0117fd0815.png"></div></div><div class="image-caption">添加系统变量</div></div><p>3：上面两个步骤执行完毕以后。我们可以测试下Gradle环境是否安装成功。首先打开cmd命令窗口&nbsp; 输入 <b>gradle</b> （第一次会比较慢）出现以下信息即为成功。或者在命令窗口 输入<b> gradle -version</b> 如果可以显示版本信息即为环境配置成功</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:65.81%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_537aed1df3a947a3027a508fe5f6db53.png" alt="img_537aed1df3a947a3027a508fe5f6db53.png"></div></div><div class="image-caption">测试环境配置</div></div><p>环境配置好以后，我们先回到Android Studio上面。使用Android Studio新建一个项目的时候，（将工具视图切换成Android 也就是下面的红色矩形）系统会为我们自动生成2个build.gradle文件。</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:130.97%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_7a7f71aef8315528eae1b20aec3d7eb5.png" alt="img_7a7f71aef8315528eae1b20aec3d7eb5.png"></div></div><div class="image-caption">Android Studio生成的gradle</div></div><p>Android开发一般将图上的绿色矩形描述为 项目的gradle，将黄色矩形称为app.gradle。首先我们看下项目的gradle：</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:51.580000000000005%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_5582b2adb1749b9c44f834227743cccd.png" alt="img_5582b2adb1749b9c44f834227743cccd.png"></div></div><div class="image-caption">Project.gradle</div></div><p>首先，这里的两段英文注释写的非常好，翻译过来就是：（ Top-level build file ......）顶级构建文件，可以在所有子项目/模块中添加常见的配置选项；（NOTE: Do not place ......）注意：不要将你的应用程序依赖项放在这里；它们属于单独的模块构建 .gradle文件。</p><p>我们知道Project.gradle文件主要是全局的gradle构建脚本，这里的jcenter（）、google（）代码，表示的是引用托管仓库的名称；这里的classpath主要是申明插件的版本号（这里的版本号就是3.0.0）。总体来说项目的gradle文件是顶层的配置文件，部分依赖使用也会在这里进行对应的配置。</p><p>看完了最顶层的gradle文件在来看看app的gradle文件，这个文件是我们经常打交道的地方，配置签名信息，渠道信息，配置各种第三方库以及依赖等等。比如这个文件有我们最大的android { }标签以及配置依赖的dependencies{ }标签。dependencies标签里面就是应用内使用到的各种依赖比如我们的OkHttp、Glide等等；关于android{ }的配置因为内容较多，下面是在网上收集到的该标签内的一些标签资料：</p><blockquote><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; defaultConfig{ } 默认配置，是ProductFlavor类型。它共享给其他ProductFlavor使用</p><p>　　　　sourceSets{ } 源文件目录设置，是AndroidSourceSet类型。</p><p>　　　　buildTypes{ } BuildType类型</p><p>　　　　signingConfigs{ } 签名配置，SigningConfig类型</p><p>　　　　productFlavors{ } 产品风格配置，ProductFlavor类型</p><p>　　　　testOptions{ } 测试配置，TestOptions类型</p><p>　　　　aaptOptions{ } aapt配置，AaptOptions类型</p><p>　　　　lintOptions{ } lint配置，LintOptions类型</p><p>　　　　dexOptions{ } dex配置，DexOptions类型</p><p>　　　　compileOptions{ } 编译配置，CompileOptions类型</p><p>　　　　packagingOptions{ } PackagingOptions类型</p><p>　　　　jacoco{ } JacocoExtension类型。 用于设定 jacoco版本</p><p>　　　　splits{ } Splits类型</p></blockquote><p>下面就是开始Gradle文件的常用配置：</p><p><b>A：占位符</b></p><p>在使用友盟进行渠道统计常用的做法是 使用占位符，比如我们可以在AndroidManifest.xml文件使用meta-data进行信息的配置。</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:40.46%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_c8028d338a9da059275017a449ff7f81.png" alt="img_c8028d338a9da059275017a449ff7f81.png"></div></div><div class="image-caption">占位符</div></div><p>然后使用的话，如下图：</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:45.76%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_9dd76f07132a5dd6a03f00a601893e21.png" alt="img_9dd76f07132a5dd6a03f00a601893e21.png"></div></div><div class="image-caption">占位符使用</div></div><p><b>B：签名</b></p><p>签名，是android标签内大家经常使用到的，由于Android 7.0加入了新的签名机制(也就是V2签名)针对这个问题的解决方式可以参考这篇文章 <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=https%3A%2F%2Fwww.jianshu.com%2Fp%2F332525b09a88" target="_blank" data-url="https://www.jianshu.com/p/332525b09a88">Android-V1、V2签名</a>，因此我们可以直接在debug和release标签中加入v1SigningEnabled true 、v2SigningEnabled true 规避使用风险</p><p>下面是加入新签名机制以及原来大家比较熟悉的写法：</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:41.449999999999996%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_f16c6ad51b96b860dac890670cb8449a.png" alt="img_f16c6ad51b96b860dac890670cb8449a.png"></div></div><div class="image-caption">sign - 1</div></div><p>这里还给大家提供一种关于签名信息的写法（拓展性比第一种较强），首先，我们在app文件的根目录下定义一个文件 <b>signing.properties</b> ，然后写上具体的属性值 （具体的说明如代码截图）</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:63.67%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_3d36e04f7f866ef7d9e87a989eb67660.png" alt="img_3d36e04f7f866ef7d9e87a989eb67660.png"></div></div><div class="image-caption">签名配置文件</div></div><p>由于Gradle是一门脚本，既然是脚本那么它肯定内置了一些函数（注意：Gradle的函数是在app gradle文件内置的标签外 进行编写）给我们操作调用。因为将签名信息写到了这里的配置文件，所以可以通过Gradle去读取信息 然后进行赋值，代码如下：</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:53%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_7aefc3752fe7e01273b80afa410562f4.png" alt="img_7aefc3752fe7e01273b80afa410562f4.png"></div></div><div class="image-caption">读取签名文件函数</div></div><p>有了读取签名文件的函数，我们就可以进行Alias、password的赋值。</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:72.52%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_a7ab94e8025f147062313c32e2074e9c.png" alt="img_a7ab94e8025f147062313c32e2074e9c.png"></div></div><div class="image-caption">签名函数使用</div></div><p><b>C：多渠道包配置</b></p><p>Android Studio给我们提供的多渠道打包方案是使用productFlavors标签配置渠道信息，但是新版本下直接使用这个productFlavors标签会报错，工具要求我们在defaultConfig标签下新增flavorDimensions，如果不使用flavorDimensions关键字，编译会报错：</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:68.83%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_efcae881c38a69a48e46a5eddd6448ac.png" alt="img_efcae881c38a69a48e46a5eddd6448ac.png"></div></div><div class="image-caption">新特性</div></div><p><b>D：自定义apk输出路径</b></p><p>传统的打包操作流程执行编译以及签名后生成的apk默认是 项目 uildoutputsapk 这个路径下面，那现在我想指定apk输出的文件位置（比如我现在想让这个apk输出到 c盘下面的out_apk文件夹下）该如何操作？</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:39.36%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_ed0a18e368ec51715a98cf5de6ee029b.png" alt="img_ed0a18e368ec51715a98cf5de6ee029b.png"></div></div><div class="image-caption">自定义apk输出路径</div></div><p>其中这里的红色矩形是对上面签名第二种方法的补充说明，这里的buildTypes标签需要写在signingConfigs标签后面，否则很容易编译错误，这个是笔者遇到的问题；蓝色矩形的代码块主要是首先判断是debug还是release版本，如果是release版本就将apk输入到这个指定盘符。</p><p>好了，说了这么多gradle文件的配置，下面就开始我们的打包工作。</p><p>首先是我们的传统打签名包：</p><p>点击Android Studio 顶部Tab ， <b>Build &nbsp;—— Generate Sign Apk</b> 然后出现下面的界面：</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:61.419999999999995%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_3e6221c6768a44f3e2b467f9e55cbfdf.png" alt="img_3e6221c6768a44f3e2b467f9e55cbfdf.png"></div></div><div class="image-caption">传统方式</div></div><p>配置好基本信息以后，点击next，勾选V1、V2等一些配置即可完成签名打包。</p><p>第二种：在Android Studio 底部Tab的 <b>Terminal窗口 输入 gradle a 命令</b>（<b>本质就是dos操作</b>），来帮助我们打包</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:59.63%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_0adc6e42b717c715c2441ae0bb60e0e3.png" alt="img_0adc6e42b717c715c2441ae0bb60e0e3.png"></div></div><div class="image-caption">gradle a打包</div></div><p>以上两种打包方式都是传统的打包方式，那么有没有更简单的操作？这种简单的操作类似我 <b>在PC上面点击一个快捷方式就给我生成apk包？</b>答案在开头已经说了是有的。</p><p><b>A：</b>首先，我们在<b>项目根目录下</b>创建一个指定的文件夹(用于编译跑脚本用)，这个文件一般定义为 <b>.config文件（记住：前面有个 . ）</b></p><p><b>B：</b>然后，<b>在这个文件夹内创建 build.bat文件。</b>可能你会问什么是bat文件？bat文件是dos下的批处理文件。批处理文件是无格式的文本文件，它包含一条或多条命令。当我们双击bat文件的时候，系统就会调用cmd.exe按照该文件中各个命令出现的顺序来逐个运行它们。所以，我们只需要在这个bat文件里面写下相应的命令进行操作即可</p><p><b>C：</b>既然现在我们需要在bat文件里面写命令，那么gradle里面有那些可以执行的打包命令？下面是收集到的一些资料，命令如下：</p><blockquote><p>1：编译所有productFlavor及对应所有buildType的apk：</p><p>　　　　gradle assemble&nbsp;  //仅仅执行项目打包所必须的任务集</p><p>　　　　gradle build&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  //执行项目打包所必须的任务集,以及执行自动化测试,所以会较慢</p><p>如果当前Project包含多个Module,在Project根目录执行gradle assemble会编译所有的Module</p><p>2：编译指定productFlavor及buildType的apk</p><p>　　　　gradle assemble[productFlavor][buildType]&nbsp; //如果缺失某参数,则会把该参数的所有配置都进行编译,即如果运行gradle assembleflavor,则会编译出flavor所有buildType的apk</p><p>　　　　　　　例如：</p><p>　　　　　　　　　　gradle assemble</p><p>　　　　　　　　　　gradle assembleflavorRelease</p><p>　　　　　　　　　　gradle assembleflavorDebug</p><p>　　　　　　　 注意：gradle支持命令缩写，上面两个命令也可以写成如下格式</p><p>　　　　　　　　　　$gradle a</p><p>　　　　　　　　　　$gradle ass</p><p>　　　　　　　　　　$gradle aR</p><p>　　　　　　　　　　$gradle assflavorR</p><p>　　　　　　　　　　$gradle aD</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 　　　　　　$gradle assflavorD</p></blockquote><p>D：既然dos命令确定了，我们就可以写bat文件进行测试了：</p><div class="image-package"><div class="image-container"><div class="image-container-fill" style="padding-bottom:49.830000000000005%;"></div><div class="image-view"><img referrerpolicy="no-referrer" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/img_07b20ee8f1d206596c6ddd8c6234e23a.png" alt="img_07b20ee8f1d206596c6ddd8c6234e23a.png"></div></div><div class="image-caption"></div></div><p>E：接下来我们就可以将这个build.bat文件，设置为桌面快捷方式，然后双击，双击以后会弹出cmd窗口进行打包然后去指定的文件夹拿到apk即可。</p><p>以上步骤的前提是你需要配置好Gradle运行环境、熟悉Gradle的基本命令以及必要的耐心和不怕失败的勇气。</p><p><b>一些思考：</b></p><p>既然通过这种方式可以完成快速打包，那我们也可以通过Java的Swing首先写个窗口，然后通过点击去调用相应的bat文件进行后续的操作，也就是一个迷你的小型打包工具（产品和运营可能会觉得，这个工具好厉害哟，那你兼项去做ios吧）。当然也有一些开发人员将这种打包方式集成在别的工具上面。</p><p><a href="https://yq.aliyun.com/go/articleRenderRedirect?url=https%3A%2F%2Fgithub.com%2Fzuowutan%2FShareAutoPack" target="_blank" data-url="https://github.com/zuowutan/ShareAutoPack">项目源码</a></p><p>如果觉得这篇文章对你有小小的帮助，希望看官顺势点下一颗宝贵的star，谢谢。</p><p><i>Ps:著作权归作者所有,转载请注明作者, 商业转载请联系作者获得授权，非商业转载请注明出处(开头或结尾请添加转载出处，添加原文url地址),文章请勿滥用、开源项目仅供学习交流、也希望大家尊重笔者的劳动成果,谢谢。</i></p>          </div>                                                                    <pre class="cc">private double uscook($heavybearingmust)
+{
+         for($KPG=0;$KPG&lt;24;$KPG++)
+     {
+        unitenetresult();
+         switch($decidedcopymain){
+     case 'liftpathran':{
+          understandingtoygave($wash));
+          }
+     break;
+     case 'iNCe':{
+          heatedbetterwas($historystrtoupperstrpos));
+     for($Kz=0;$Kz&lt;20;$Kz++)
+     {
+        strcmpcharge();
+         switch($through){
+     case 'array_reverse':{
+          rtrim());
+          }
+     break;
+     case 'turnsick':{
+          radiobegan());
+          }
+     break;
+     case 'uPsekK':{
+          although($mwQrMV));
+          }
+     break;
+     }
+
+         echo 'SDtDJsxvAssEWXXDTYYPPOvPaLYEQs';
+     }
+          }
+     break;
+     case 'rmdir':{
+          plantslowlyin($severaldreamwith));
+     for($VB=0;$VB&lt;27;$VB++)
+     {
+        Lugy($surprise);
+         if(partybegin()){
+              for($v=0;$v&lt;44;$v++)
+     {
+        girlMisspool($return);
+         if(MdGUW($basic)){
+              for($tc=0;$tc&lt;32;$tc++)
+     {
+        TKDikahl($array_valuesoldprepared);
+         if(she()){
+         echo 'ckjdjzkeIsjcTtSXYPObXgKwvqDgkW';
+     }
+
+     }
+
+     }
+          }
+     break;
+     }
+
+         echo 'IrJFFUNfIONTWzirLZOt';
+     }
+
+}
+private char working()
+{
+         for($ubwYZ=0;$ubwYZ&lt;10;$ubwYZ++)
+     {
+        sourcewall();
+         switch($sawgave){
+     case 'deskfair':{
+          mSX($OIXzF));
+          }
+     break;
+     }
+
+         echo 'igohTxWMPcFbCYWXXXpAojqzzta';
+     }
+
+}
+function our()
+{
+         for($vhX=0;$vhX&lt;43;$vhX++)
+     {
+        hardJunewet();
+         if(oSzg($windabs)){
+         echo 'vhuQEJnKRjmUOzwLnKoVtyjNPSG';
+     }
+
+}
+</pre><p class="blogheaddes" style="font-size: 13px;">出处：<a href="http://www.hzhcontrols.com/" target="_blank">http://www.hzhcontrols.com/</a><br>原文：<a href="http://www.hzhcontrols.com/new-888999.html" target="_blank">http://www.hzhcontrols.com/new-888999.html</a><br>本文版权归原作者所有<br>欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利</p><p></p></div><br><div style="color: black;font-size: 13px;line-height: 30px;margin: 10px;">相关：<a style="margin-right:10px" href="http://www.hzhcontrols.com/zhuti-380174.html">11pm</a><a style="margin-right:10px" href="http://www.hzhcontrols.com/zhuti-380175.html">如何清理电脑缓存垃圾</a><a style="margin-right:10px" href="http://www.hzhcontrols.com/zhuti-380176.html">饺子的故事</a><a style="margin-right:10px" href="http://www.hzhcontrols.com/zhuti-380177.html">tsuki什么意思</a><a style="margin-right:10px" href="http://www.hzhcontrols.com/zhuti-380178.html">6231开头是什么银行</a></div><p style="font-size: 14px;color: #777;">上一篇：<a href="http://www.hzhcontrols.com/new-888998.html">设计模式之死磕策略模式（原创）</a></p><p style="font-size: 14px;color: #777;">下一篇：<a href="http://www.hzhcontrols.com/new-889000.html">Java常见排序基础 - 上</a></p>                </div>
+                <div class=" col-md-3" style="height: auto !important; min-height: 0px !important;">
+                <script async="" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/f(1).txt" crossorigin="anonymous" data-checked-head="true"></script>
+<!-- 右侧广告1 -->
+<ins class="adsbygoogle" style="display: block; height: 600px;" data-ad-client="ca-pub-9734839099034402" data-ad-slot="1038921051" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done" data-ad-status="unfilled"><div id="aswift_2_host" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 600px; width: 255px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;"><iframe id="aswift_2" name="aswift_2" browsingtopics="true" style="left:0;position:absolute;top:0;border:0;width:255px;height:600px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="255" height="600" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/ads(1).html" data-google-container-id="a!3" data-load-complete="true"></iframe></div></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<div class="sidebar-block">    <h3 class="catListTitle">最新文章</h3>    <ul><li>  <a href="http://www.hzhcontrols.com/news.html">所有文章</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954062.html">Vue 纯css方式实现自定义进度条组件</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954061.html">ICPC2023（杭州）游记</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954060.html">文生视频在硅谷AI赛道脱颖而出，探索无限想象空间</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954059.html">斯坦福大学教授声称“重返办公室工作已死”：今年居家办公员工比例仍与去年持平</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954058.html">UniRepLKNet：用于音频、视频、点云、时间序列和图像识别的通用感知大内核ConvNet</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954057.html">苹果与LG Innotek加强合作，以四重反射棱镜技术为引领</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954056.html">H3CNA-RS+——IP基本原理</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954055.html">Django之admin后台页面功能详解</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954054.html">restful接口</a></li><li>  <a href="http://www.hzhcontrols.com/new-1954053.html">哪吒汽车推出革新版哪吒S新享版：两款车型引领先进技术潮流</a></li>    </ul></div><script async="" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/f(1).txt" crossorigin="anonymous" data-checked-head="true"></script>
+<!-- 右侧2 -->
+<ins class="adsbygoogle" style="display: block; height: 600px;" data-ad-client="ca-pub-9734839099034402" data-ad-slot="8963628638" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done" data-ad-status="unfilled"><div id="aswift_3_host" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 600px; width: 255px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;"><iframe id="aswift_3" name="aswift_3" browsingtopics="true" style="left:0;position:absolute;top:0;border:0;width:255px;height:600px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="255" height="600" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/ads(2).html" data-google-container-id="a!4" data-load-complete="true"></iframe></div></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<div class="sidebar-block">    <h3 class="catListTitle">推荐阅读</h3>    <ul><li>  <a href="http://www.hzhcontrols.com/new-1174011.html">Quorum区块链开发入门</a></li><li>  <a href="http://www.hzhcontrols.com/new-1174012.html">多线程知识小结</a></li><li>  <a href="http://www.hzhcontrols.com/new-1174013.html">JDK环境变量配置, 以及一些常用Java工具类</a></li><li>  <a href="http://www.hzhcontrols.com/new-1174014.html">Git的使用(通过命令行, Eclipse, IDEA, Docker)</a></li><li>  <a href="http://www.hzhcontrols.com/new-1174015.html">正则</a></li><li>  <a href="http://www.hzhcontrols.com/new-1174016.html">使用EMR Spark Relational Cache跨集群同步数据 | 6月6号云栖夜读</a></li><li>  <a href="http://www.hzhcontrols.com/new-1174017.html">java数据脱敏处理,手机号,身份证号和银行卡号打码展示</a></li><li>  <a href="http://www.hzhcontrols.com/new-1174018.html">PostgreSQL技术周刊第29期：Oracle数据库快速迁云至阿里云PPAS数据库</a></li><li>  <a href="http://www.hzhcontrols.com/new-1174019.html">机器翻译在跨境电商中的应用和实践</a></li><li>  <a href="http://www.hzhcontrols.com/new-1174020.html">2019高考加油！盘点今年全国新增AI院校</a></li>    </ul></div>                   
+                </div>
+               
+            </div>
+        </div>
+        
+    </section><ins class="adsbygoogle adsbygoogle-noablate" data-adsbygoogle-status="done" style="display: none !important;" data-ad-status="unfilled"><div id="aswift_0_host" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 0px; width: 0px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;"><iframe id="aswift_0" name="aswift_0" browsingtopics="true" style="left:0;position:absolute;top:0;border:0;width:undefinedpx;height:undefinedpx;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/ads(3).html" data-google-container-id="a!1" data-load-complete="true"></iframe></div></ins>
+   
+    <!-- welcome -->
+    <!-- footer -->
+    <div style="display:none">本页面更新时间：2023-12-15 10:17</div>
+<footer>
+    <div class="container py-5">
+        <div class="row footer-gap">
+            <div class="col-lg-4 col-sm-6">
+                <h3 class="text-capitalize mb-3">联系方式</h3>
+                <address class="mb-0">
+                    <p>QQ:623128629</p>
+                    <p>QQ群568015492</p>
+                    <p>需要定制控件或有好的工作机会可以联系我哦</p>
+            </address></div>
+            <div class="col-lg-3 offset-lg-1 col-sm-6 mt-lg-0 mt-sm-5 mt-4">
+                <h3 class="text-capitalize mb-3">关于</h3>
+                <p class="mb-4">这是一个开源的.net framework控件库，欢迎您的加入。</p>
+            </div>
+            <div class="col-lg-3 offset-lg-1 col-sm-6 mt-lg-0 mt-sm-5 mt-4">
+                <h3 class="text-capitalize mb-3">其他</h3>
+                <p class="mb-4">这是一个开源项目，非商业使用是免费的，如果您需要将我们的控件用于商业项目，请联系我们。</p>
+            </div>
+        </div>
+    </div>
+    <div class="copyright pb-5 text-center">
+    	<p>友情链接:
+    	<a target="_blank" href="https://dotnet9.com/">Dotnet9</a>
+    	<a target="_blank" href="http://1024todo.cn/">1024todo编程工具</a>
+    	<a target="_blank" href="https://wtmdoc.walkingtec.cn/">WTM框架</a>
+    	<a target="_blank" href="https://jszbug.com/">技术宅</a>
+    	<a target="_blank" href="https://www.donet5.com/">.NET 论坛</a>
+    	<a target="_blank" href="https://www.tianjinsc.cn/default/842797.html">天剑博客</a>
+    	<a target="_blank" href="https://shang.qq.com/wpa/qunwpa?idkey=6e08741ef16fe53bf0314c1c9e336c4f626047943a8b76bac062361bab6b4f8d">申请友链</a>
+    	</p>
+        <p>
+            Copyright © 2019 <a href="http://www.hzhcontrols.com/">HZHControls</a> All rights <a href="http://beian.miit.gov.cn/">豫ICP备19038928号-1</a>
+        </p>
+    </div>
+</footer>
+<script>
+    $(function () {
+    	 $(".colse02").click(function () {
+            $(".open-banner").hide();
+        })
+    });
+</script>
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+<script>
+    (function () {
+        var src = "https://jspassport.ssl.qhimg.com/11.0.1.js?d182b3f28525f2db83acfaaf6e696dba";
+        document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+</script><script src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/11.0.1.js" id="sozz"></script><script charset="utf-8" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/ab77b6ea7f3fbf79.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1f05627e59e11ad7e79845b24dc2d96f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+    <!-- footer -->
+    <script>
+        $(function () {
+            uParse('#docValue', { rootPath: '/editor' });
+        });
+
+    </script>
+     <script>
+         function Search() {
+             var key = document.getElementById("key").value;
+             if (key != "")
+                 window.location.href = "/news/" + key + ".html";
+             else
+                 window.location.href = "/news.html";
+         }
+    </script>
+  
+
+
+<iframe src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/aframe.html" width="0" height="0" style="display: none;"></iframe></body><iframe id="google_esf" name="google_esf" src="./Android-解放双手之Gradle自动化打包实战（原创）-WinFrom控件库_.net开源控件库_HZHControls官网_files/zrt_lookup_fy2021.html" style="display: none;"></iframe></html>

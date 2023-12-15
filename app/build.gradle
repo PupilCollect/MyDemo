@@ -74,7 +74,10 @@ android {
             debuggable true // 启用debug的buildType配置
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
+            zipAlignEnabled true // Zipalign优化
+            shrinkResources true // 移除无用的resource文件
+
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

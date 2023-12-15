@@ -1,0 +1,21 @@
+那么gradle里面有那些可以执行的打包命令？下面是收集到的一些资料，命令如下：
+1：编译所有productFlavor及对应所有buildType的apk：
+　　　　gradle assemble  //仅仅执行项目打包所必须的任务集
+　　　　gradle build     //执行项目打包所必须的任务集,以及执行自动化测试,所以会较慢
+
+如果当前Project包含多个Module,在Project根目录执行gradle assemble会编译所有的Module
+
+2：编译指定productFlavor及buildType的apk
+　　　　gradle assemble[productFlavor][buildType]  //如果缺失某参数,则会把该参数的所有配置都进行编译,即如果运行gradle assembleflavor,则会编译出flavor所有buildType的apk
+
+　　　　　　　例如：
+　　　　　　　　　　gradle assemble
+　　　　　　　　　　gradle assembleflavorRelease
+　　　　　　　　　　gradle assembleflavorDebug
+　　　　　　　 注意：gradle支持命令缩写，上面两个命令也可以写成如下格式
+　　　　　　　　　　$gradle a
+　　　　　　　　　　$gradle ass
+　　　　　　　　　　$gradle aR
+　　　　　　　　　　$gradle assflavorR
+　　　　　　　　　　$gradle aD
+              　　$gradle assflavorD
